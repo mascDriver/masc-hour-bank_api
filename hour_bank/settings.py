@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -31,12 +32,14 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'simpleui',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'attendance'
 ]
 
 MIDDLEWARE = [
@@ -54,7 +57,7 @@ ROOT_URLCONF = 'hour_bank.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'frontend' / 'templates']
+        'DIRS': [BASE_DIR / 'frontend/templates']
         ,
         'APP_DIRS': True,
         'OPTIONS': {
@@ -117,8 +120,58 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+SIMPLEUI_CONFIG = {
+    "system_keep": False,
+    "menus": [
+        {
+            "app": "auth",
+            "name": "Users",
+            "icon": "fas fa-shield-alt",
+            "models": [
+                {
+                    "name": "Users",
+                    "icon": "fa fa-user",
+                    "url": "auth/user/"
+                },
+                {
+                    "name": "Groups",
+                    "icon": "fas fa-users-cog",
+                    "url": "auth/group/"
+                }
+            ]
+        },
+        {
+            "app": "attendance",
+            "name": "Attendance",
+            "icon": "fas fa-calendar",
+            "models": [
+                {
+                    "name": "Attendance day",
+                    "icon": "fas fa-calendar-day",
+                    "url": "attendance/attendanceday/"
+                },
+                {
+                    "name": "Attendance month",
+                    "icon": "fas fa-calendar-week",
+                    "url": "attendance/attendancemonth/"
+                },
+                {
+                    "name": "Employee shifts",
+                    "icon": "fas fa-address-book",
+                    "url": "attendance/employeeshift/"
+                },
+                {
+                    "name": "Work shifts",
+                    "icon": "fas fa-clipboard-list",
+                    "url": "attendance/workshift/"
+                },
+            ]
+        }
+    ]
+}
