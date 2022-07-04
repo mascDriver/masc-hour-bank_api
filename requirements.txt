@@ -1,0 +1,7 @@
+django==4.0.5
+pandas==1.4.3
+django-simpleui==2022.6.131
+djangorestframework==3.13.1
+markdown==3.3.7
+django-filter==22.1
+pygments==2.12.0

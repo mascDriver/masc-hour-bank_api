@@ -1,7 +1,6 @@
 from calendar import month_name
-from datetime import datetime, timedelta
+from datetime import datetime
 
-import pandas as pd
 from django.conf import settings
 from django.db import models
 from django.utils.translation import gettext_lazy as _
@@ -47,40 +46,6 @@ class AttendanceDay(models.Model):
     def __str__(self):
         return f"{self.employee_shift.employee.get_full_name()} - {self.day}"
 
-    def save(self, *args, **kwargs):
-        self.worked_total = (datetime.min + self.total()).time()
-        super(AttendanceDay, self).save(*args, **kwargs)
-
-    def total(self):
-        if not self.pk:
-            return timedelta(seconds=0)
-        if self.attendance_hour.count() % 2 != 0:
-            return timedelta(seconds=0)
-        time_working = 0
-        for cont, register_time in enumerate(self.attendance_hour.all()):
-            if cont % 2 != 0:
-                continue
-            if self.employee_shift.work_shift.tolerance_time and register_time.hour.hour == self.employee_shift.work_shift.entry1.hour and (
-                    pd.Timedelta(
-                        register_time.hour.isoformat()).total_seconds() - self.employee_shift.work_shift.tolerance_time.second <= pd.Timedelta(
-                self.employee_shift.work_shift.entry1.isoformat()).total_seconds() or pd.Timedelta(
-                register_time.hour.isoformat()).total_seconds() + self.employee_shift.work_shift.tolerance_time.second <= pd.Timedelta(
-                self.employee_shift.work_shift.entry1.isoformat()).total_seconds()):
-                entry = datetime.combine(self.day, self.employee_shift.work_shift.entry1)
-            elif self.employee_shift.work_shift.tolerance_time and register_time.hour.hour == self.employee_shift.work_shift.entry2.hour and (
-                    pd.Timedelta(
-                        register_time.hour.isoformat()).total_seconds() - self.employee_shift.work_shift.tolerance_time.second <= pd.Timedelta(
-                self.employee_shift.work_shift.entry2.isoformat()).total_seconds() or pd.Timedelta(
-                register_time.hour.isoformat()).total_seconds() + self.employee_shift.work_shift.tolerance_time.second <= pd.Timedelta(
-                self.employee_shift.work_shift.entry2.isoformat()).total_seconds()):
-                entry = datetime.combine(self.day, self.employee_shift.work_shift.entry2)
-            else:
-                entry = datetime.combine(self.day, register_time.hour)
-            exit = datetime.combine(self.day,
-                                    self.get_next_or_prev(self.attendance_hour.all(), register_time, 'next').hour)
-            time_working += (exit - entry).seconds
-        return timedelta(seconds=time_working)
-
     def get_next_or_prev(self, models, item, direction):
         getit = False
         if direction == 'prev':
@@ -106,15 +71,3 @@ class AttendanceMonth(models.Model):
 
     def __str__(self):
         return f"{self.employee.get_full_name()} - {month_name[int(self.month)]}"
-
-    def save(self, *args, **kwargs):
-        self.worked_total = self.total()
-        super(AttendanceMonth, self).save(*args, **kwargs)
-
-    def total(self):
-        if not self.pk:
-            return 0
-        time_working = 0
-        for cont, attendance_day in enumerate(self.attendance_day.all()):
-            time_working += pd.Timedelta(attendance_day.worked_total.isoformat()).total_seconds()
-        return time_working
