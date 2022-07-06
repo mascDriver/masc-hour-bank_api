@@ -63,7 +63,6 @@ class AttendanceDay(models.Model):
 
 
 class AttendanceMonth(models.Model):
-    from django.contrib.auth.models import User
     attendance_day = models.ManyToManyField(AttendanceDay, verbose_name=_("Attendance registered in day"))
     employee = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     month = models.CharField(max_length=2, choices=[(str(i), month_name[i]) for i in range(1, 13)], default=1)
