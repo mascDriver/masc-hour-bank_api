@@ -40,7 +40,7 @@ class AttendanceHour(models.Model):
 class AttendanceDay(models.Model):
     employee_shift = models.ForeignKey(EmployeeShift, verbose_name=_("Employee shift"), on_delete=models.CASCADE)
     day = models.DateField()
-    attendance_hour = models.ManyToManyField(AttendanceHour, verbose_name=_("Hour registered"))
+    attendance_hour = models.ManyToManyField(AttendanceHour, verbose_name=_("Hour registered"), related_name='attendance_hour')
     worked_total = models.TimeField(default=datetime.min.time())
 
     def __str__(self):

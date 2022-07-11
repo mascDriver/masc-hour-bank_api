@@ -19,13 +19,15 @@ class AttendanceHourSerializer(serializers.ModelSerializer):
 
 
 class AttendanceDaySerializer(serializers.ModelSerializer):
-    attendance_hour = AttendanceHourSerializer(many=True)
-    employee_shift = EmployeeShiftSerializer()
-
     class Meta:
         model = AttendanceDay
-        fields = '__all__'
+        fields = ('employee_shift', 'day', 'attendance_hour', 'worked_total')
 
+    def to_representation(self, instance):
+        representation = super(AttendanceDaySerializer, self).to_representation(instance)
+        representation['attendance_hour'] = AttendanceHourSerializer(instance.attendance_hour.all(), many=True).data
+        representation['employee_shift'] = EmployeeShiftSerializer(instance.employee_shift).data
+        return representation
 
 
 class AttendanceMonthSerializer(serializers.ModelSerializer):
