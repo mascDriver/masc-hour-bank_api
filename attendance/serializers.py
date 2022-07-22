@@ -15,7 +15,7 @@ class EmployeeShiftSerializer(serializers.ModelSerializer):
 class AttendanceHourSerializer(serializers.ModelSerializer):
     class Meta:
         model = AttendanceHour
-        fields = ('hour', )
+        fields = '__all__'
 
 
 class AttendanceDaySerializer(serializers.ModelSerializer):
