@@ -1,10 +1,10 @@
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
-
+from rest_framework.viewsets import ModelViewSet
+from rest_framework.generics import ListCreateAPIView
 from attendance.models import AttendanceMonth, AttendanceDay
 from attendance.serializers import AttendanceMonthSerializer, AttendanceDaySerializer
 
 
-class AttendanceMonthList(ListCreateAPIView):
+class AttendanceMonthViewset(ModelViewSet):
     """
     List all AttendanceMonth, or create a new AttendanceMonth.
     """
@@ -12,15 +12,14 @@ class AttendanceMonthList(ListCreateAPIView):
     serializer_class = AttendanceMonthSerializer
 
 
-class AttendanceMonthDetail(RetrieveUpdateDestroyAPIView):
-    """
-    Retrieve, update or delete a AttendanceMonth instance.
-    """
-    queryset = AttendanceMonth.objects.all()
+class AttendanceMonthListApi(ListCreateAPIView):
+    def get_queryset(self):
+        return AttendanceMonth.objects.filter(month=self.kwargs['month'], attendance_day__day__year=self.kwargs['year'])
+
     serializer_class = AttendanceMonthSerializer
 
 
-class AttendanceDayList(ListCreateAPIView):
+class AttendanceDayViewSet(ModelViewSet):
     """
     List all AttendanceMonth, or create a new AttendanceMonth.
     """
@@ -28,9 +27,9 @@ class AttendanceDayList(ListCreateAPIView):
     serializer_class = AttendanceDaySerializer
 
 
-class AttendanceDayDetail(RetrieveUpdateDestroyAPIView):
-    """
-    List all AttendanceMonth, or create a new AttendanceMonth.
-    """
-    queryset = AttendanceDay.objects.all()
+class AttendanceDayListApi(ListCreateAPIView):
+    def get_queryset(self):
+        return AttendanceDay.objects.filter(day__month=self.kwargs['month'], day__year=self.kwargs['year'],
+                                            day__day=self.kwargs['day'])
+
     serializer_class = AttendanceDaySerializer

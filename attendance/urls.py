@@ -1,13 +1,14 @@
-from django.urls import path
-from rest_framework.urlpatterns import format_suffix_patterns
+from django.urls import path, include
+from rest_framework import routers
+
 from attendance.views import *
 
+router = routers.DefaultRouter()
+router.register('month', AttendanceMonthViewset, basename='month')
+router.register('day', AttendanceDayViewSet, basename='day')
 
 urlpatterns = [
-    path('attedance-month/', AttendanceMonthList.as_view()),
-    path('attedance-month/<int:pk>', AttendanceMonthDetail.as_view()),
-    path('attedance-day/', AttendanceDayList.as_view()),
-    path('attedance-day/<int:pk>', AttendanceDayDetail.as_view()),
+    path('', include(router.urls)),
+    path('month/<int:month>/year/<int:year>', AttendanceMonthListApi.as_view()),
+    path('day/<int:day>/month/<int:month>/year/<int:year>', AttendanceDayListApi.as_view())
 ]
-
-urlpatterns = format_suffix_patterns(urlpatterns)
