@@ -1,6 +1,9 @@
-from rest_framework.viewsets import ModelViewSet
+from rest_framework import status
 from rest_framework.generics import ListCreateAPIView
-from attendance.models import AttendanceMonth, AttendanceDay
+from rest_framework.response import Response
+from rest_framework.viewsets import ModelViewSet
+
+from attendance.models import AttendanceMonth, AttendanceDay, AttendanceHour
 from attendance.serializers import AttendanceMonthSerializer, AttendanceDaySerializer
 
 
@@ -25,6 +28,14 @@ class AttendanceDayViewSet(ModelViewSet):
     """
     queryset = AttendanceDay.objects.all()
     serializer_class = AttendanceDaySerializer
+
+    def destroy(self, request, *args, **kwargs):
+        data = request.data
+        object = self.get_object()
+        object.attendance_hour.remove(AttendanceHour.objects.get(id=data['id']))
+        object.save()
+        serializer = AttendanceDaySerializer(object)
+        return Response(status=status.HTTP_200_OK, data=serializer.data)
 
 
 class AttendanceDayListApi(ListCreateAPIView):

@@ -25,8 +25,9 @@ class AttendanceDaySerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         data = self.context['request'].data
+        if not instance.attendance_hour.filter(hour=data['attendance_hour']).exists():
+            instance.attendance_hour.remove(AttendanceHour.objects.get(id=data['id']))
         instance.attendance_hour.add(AttendanceHour.objects.get(hour=data['attendance_hour']))
-        instance.attendance_hour.remove(AttendanceHour.objects.get(id=data['id']))
         return instance
 
     class Meta:
