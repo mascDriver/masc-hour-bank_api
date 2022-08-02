@@ -36,6 +36,9 @@ class AttendanceHour(models.Model):
     def __str__(self):
         return f"{self.hour}"
 
+    class Meta:
+        ordering = ('hour', )
+
 
 class AttendanceDay(models.Model):
     employee_shift = models.ForeignKey(EmployeeShift, verbose_name=_("Employee shift"), on_delete=models.CASCADE)

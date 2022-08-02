@@ -30,6 +30,16 @@ Para usar masc-hour-bank_api, siga estas etapas:
 python manage.py runserver
 ```
 
+Também é necessário adicionar as horas para que o sistema tenha onde se basear, basta seguir esses passos
+```python
+import pandas
+time_range = pandas.date_range('2022-08-02T00:00:00.000Z', '2022-08-02T23:59:00.000Z', freq='T')
+from attendance.models import AttendanceHour
+for time in time_range.time:
+    AttendanceHour.objects.get_or_create(hour=time)
+```
+
+
 ## 📫 Contribuindo para Masc Hour Bank_api
 <!---Se o seu README for longo ou se você tiver algum processo ou etapas específicas que deseja que os contribuidores sigam, considere a criação de um arquivo CONTRIBUTING.md separado--->
 Para contribuir com masc-hour-bank_api, siga estas etapas:
