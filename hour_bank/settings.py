@@ -181,6 +181,7 @@ SIMPLEUI_CONFIG = {
 }
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
+    'https://maschourbank.vercel.app',
 ]
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
