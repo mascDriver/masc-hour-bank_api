@@ -1,1 +1,1 @@
-web: python manage.py migrate && gunicorn hour_bank.wsgi
+web: python manage.py migrate && python manage.py collectstatic --noinput && gunicorn hour_bank.wsgi
