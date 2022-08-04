@@ -1,1 +1,1 @@
-web: python manage.py migrate && gunicorn hour_bank.wsgi -b 0.0.0.0
+web: python manage.py migrate && gunicorn hour_bank.wsgi
