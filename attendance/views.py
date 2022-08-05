@@ -6,9 +6,11 @@ from rest_framework.generics import ListCreateAPIView, CreateAPIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 from attendance.models import AttendanceMonth, AttendanceDay, AttendanceHour, EmployeeShift
-from attendance.serializers import AttendanceMonthSerializer, AttendanceDaySerializer, RegisterSerializer
+from attendance.serializers import AttendanceMonthSerializer, AttendanceDaySerializer, RegisterSerializer, \
+    MyTokenObtainPairSerializer
 
 
 class AttendanceMonthViewset(ModelViewSet):
@@ -87,3 +89,7 @@ class RegisterView(CreateAPIView):
     queryset = User.objects.all()
     permission_classes = (AllowAny,)
     serializer_class = RegisterSerializer
+
+
+class MyTokenObtainPairView(TokenObtainPairView):
+    serializer_class = MyTokenObtainPairSerializer

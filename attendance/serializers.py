@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from attendance.models import AttendanceMonth, AttendanceDay, AttendanceHour, EmployeeShift
 
@@ -81,3 +82,10 @@ class RegisterSerializer(serializers.ModelSerializer):
         user.save()
 
         return user
+
+
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    def validate(self, attrs):
+        data = super().validate(attrs)
+        data['first_name'] = self.user.first_name
+        return data
