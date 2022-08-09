@@ -10,5 +10,6 @@ router.register('day', AttendanceDayViewSet, basename='day')
 urlpatterns = [
     path('', include(router.urls)),
     path('month/<int:month>/year/<int:year>', AttendanceMonthListApi.as_view()),
-    path('day/<int:day>/month/<int:month>/year/<int:year>', AttendanceDayListApi.as_view())
+    path('day/<int:day>/month/<int:month>/year/<int:year>', AttendanceDayListApi.as_view()),
+    path('user/logout', logout_api)
 ]

@@ -1,12 +1,14 @@
 from dateutil.parser import isoparse
 from dateutil.tz import tz
+from django.contrib.auth import authenticate, logout
 from django.contrib.auth.models import User
+from django.http import HttpResponse
 from rest_framework import status
 from rest_framework.generics import ListCreateAPIView, CreateAPIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
-from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework_simplejwt.views import TokenViewBase
 
 from attendance.models import AttendanceMonth, AttendanceDay, AttendanceHour, EmployeeShift
 from attendance.serializers import AttendanceMonthSerializer, AttendanceDaySerializer, RegisterSerializer, \
@@ -14,6 +16,8 @@ from attendance.serializers import AttendanceMonthSerializer, AttendanceDaySeria
 
 
 class AttendanceMonthViewset(ModelViewSet):
+    permission_classes = (IsAuthenticated,)
+
     """
     List all AttendanceMonth, or create a new AttendanceMonth.
     """
@@ -22,6 +26,8 @@ class AttendanceMonthViewset(ModelViewSet):
 
 
 class AttendanceMonthListApi(ListCreateAPIView):
+    permission_classes = (IsAuthenticated,)
+
     def get_queryset(self):
         try:
             user_id = self.request.auth.payload.get('user_id')
@@ -91,5 +97,17 @@ class RegisterView(CreateAPIView):
     serializer_class = RegisterSerializer
 
 
-class MyTokenObtainPairView(TokenObtainPairView):
+class TokenViewBaseCustom(TokenViewBase):
+    def post(self, request, *args, **kwargs):
+        response = super(TokenViewBaseCustom, self).post(request, *args, **kwargs)
+        authenticate(username=request.data['username'], password=request.data['password'])
+        return response
+
+
+class MyTokenObtainPairView(TokenViewBaseCustom):
     serializer_class = MyTokenObtainPairSerializer
+
+
+def logout_api(request):
+    logout(request)
+    return HttpResponse()

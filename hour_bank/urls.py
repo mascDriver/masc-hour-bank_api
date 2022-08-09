@@ -2,11 +2,16 @@ from django.contrib import admin
 from django.urls import path, include
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
+from fcm_django.api.rest_framework import FCMDeviceAuthorizedViewSet
 from rest_framework import permissions
+from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenRefreshView
 
 from attendance.views import RegisterView, MyTokenObtainPairView
 
+router = DefaultRouter()
+
+router.register('devices', FCMDeviceAuthorizedViewSet)
 schema_view = get_schema_view(
     openapi.Info(
         title="Attendance Hours API",
@@ -32,5 +37,6 @@ urlpatterns = [
     path('api/token/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/register/', RegisterView.as_view(), name='auth_register'),
-    path('attendance/', include('attendance.urls'))
+    path('attendance/', include('attendance.urls')),
+    path('firebase/', include(router.urls)),
 ]

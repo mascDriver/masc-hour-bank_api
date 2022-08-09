@@ -14,6 +14,7 @@ import os
 from datetime import timedelta
 from pathlib import Path
 from dotenv import load_dotenv
+from rest_framework.permissions import AllowAny
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -33,7 +34,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
-    'simpleui',
+    # 'simpleui',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -44,6 +45,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'drf_yasg',
+    'fcm_django'
 ]
 
 MIDDLEWARE = [
@@ -184,7 +186,6 @@ CORS_ALLOWED_ORIGINS = [
 ]
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.BasicAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
 }
@@ -192,10 +193,37 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=7),
 }
 
-import dj_database_url
+if not DEBUG:
+    import dj_database_url
 
-DATABASE_URL = os.getenv("DATABASE_URL")
+    DATABASE_URL = os.getenv("DATABASE_URL")
 
-DATABASES = {
-    "default": dj_database_url.config(default=DATABASE_URL, conn_max_age=1800),
+    DATABASES = {
+        "default": dj_database_url.config(default=DATABASE_URL, conn_max_age=1800),
+    }
+
+from firebase_admin import initialize_app, credentials
+
+cred = initialize_app(
+    credential=credentials.Certificate(
+        {
+            "type": "service_account",
+            "project_id": "masc-hour-banc",
+            "private_key_id": os.getenv('FIREBASE_PRIVATE_KEY_ID'),
+            "private_key": os.getenv('FIREBASE_PRIVATE_KEY'),
+            "client_email": os.getenv('FIREBASE_CLIENT_EMAIL'),
+            "client_id": os.getenv('FIREBASE_CLIENT_ID'),
+            "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+            "token_uri": "https://oauth2.googleapis.com/token",
+            "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+            "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-ypbju%40masc-hour-banc.iam.gserviceaccount.com"
+        }
+    )
+)
+
+FCM_DJANGO_SETTINGS = {
+    "ONE_DEVICE_PER_USER": True,
+    "APP_VERBOSE_NAME": "Notificações Push",
+    "DELETE_INACTIVE_DEVICES": True,
+    "UPDATE_ON_DUPLICATE_REG_ID": True,
 }
