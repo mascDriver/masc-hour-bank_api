@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'attendance',
+    'attendance.apps.AttendanceConfig',
     'rest_framework',
     'corsheaders',
     'drf_yasg',
@@ -114,7 +114,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Sao_Paulo'
 
 USE_I18N = True
 
@@ -222,7 +222,6 @@ cred = initialize_app(
 )
 
 FCM_DJANGO_SETTINGS = {
-    "ONE_DEVICE_PER_USER": True,
     "APP_VERBOSE_NAME": "Notificações Push",
     "DELETE_INACTIVE_DEVICES": True,
     "UPDATE_ON_DUPLICATE_REG_ID": True,

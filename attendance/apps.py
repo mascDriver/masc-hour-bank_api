@@ -7,3 +7,4 @@ class AttendanceConfig(AppConfig):
 
     def ready(self):
         import attendance.signals
+        import attendance.scheduler
