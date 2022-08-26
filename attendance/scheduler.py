@@ -15,7 +15,7 @@ def verify_not_entrys():
     """
     for work_shift in WorkShift.objects.all():
         employee_shift = EmployeeShift.objects.filter(work_shift=work_shift)
-        if datetime.now().time().replace(microsecond=0) in (
+        if datetime.now().time().replace(microsecond=0, second=0) in (
                 work_shift.entry1, work_shift.entry2, work_shift.exit1, work_shift.exit2):
             for employee_shift in employee_shift:
                 FCMDevice.objects.filter(user=employee_shift.employee).send_message(
@@ -25,5 +25,5 @@ def verify_not_entrys():
 
 
 scheduler = BackgroundScheduler()
-scheduler.add_job(verify_not_entrys, 'interval', minutes=1)
+scheduler.add_job(verify_not_entrys, 'cron', minute='*')
 scheduler.start()
