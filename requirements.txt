@@ -1,4 +1,4 @@
-django==4.0.5
+django==4.1
 pandas==1.4.3
 django-simpleui==2022.6.131
 djangorestframework==3.13.1
@@ -14,3 +14,4 @@ whitenoise==6.2.0
 psycopg2-binary==2.9.3
 dj-database-url==1.0.0
 fcm-django==1.0.12
+apscheduler==3.9.1
