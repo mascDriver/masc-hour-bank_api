@@ -2,9 +2,18 @@ from datetime import datetime
 
 from apscheduler.schedulers.background import BackgroundScheduler
 from fcm_django.models import FCMDevice
-from firebase_admin.messaging import Message, Notification
+from firebase_admin.messaging import Message
 
 from attendance.models import WorkShift, EmployeeShift
+
+message = Message(
+    data={
+        "title": "Atenção!",
+        "body": "Está na hora de bater o ponto ⌚⌚⌚",
+        "data": '{"click_action": "/day"}',
+        "priority": "high"
+    }
+)
 
 
 def verify_not_entrys():
@@ -18,10 +27,7 @@ def verify_not_entrys():
         if datetime.now().time().replace(microsecond=0, second=0) in (
                 work_shift.entry1, work_shift.entry2, work_shift.exit1, work_shift.exit2):
             for employee_shift in employee_shift:
-                FCMDevice.objects.filter(user=employee_shift.employee).send_message(
-                    Message(notification=Notification(title="Atenção", body="Está na hora de bater o ponto",
-                                                      image="image_url"))
-                )
+                FCMDevice.objects.filter(user=employee_shift.employee).send_message(message)
 
 
 scheduler = BackgroundScheduler()
