@@ -1,4 +1,4 @@
-from calendar import month_name
+from calendar import month_name, day_abbr
 from datetime import datetime
 
 from django.conf import settings
@@ -15,6 +15,8 @@ class WorkShift(models.Model):
     exit2 = models.TimeField(verbose_name=_('Second exit'))
     entry3 = models.TimeField(verbose_name=_('Optional entry'), null=True, blank=True)
     exit3 = models.TimeField(verbose_name=_('Optional exit'), null=True, blank=True)
+    working_days = models.CharField(max_length=1,
+                                    choices=((0, ' - '.join(day_abbr[0:5])), (1, ' - '.join(day_abbr[0:6]))), default=0)
 
     def __str__(self):
         if self.name:
@@ -37,13 +39,14 @@ class AttendanceHour(models.Model):
         return f"{self.hour}"
 
     class Meta:
-        ordering = ('hour', )
+        ordering = ('hour',)
 
 
 class AttendanceDay(models.Model):
     employee_shift = models.ForeignKey(EmployeeShift, verbose_name=_("Employee shift"), on_delete=models.CASCADE)
     day = models.DateField()
-    attendance_hour = models.ManyToManyField(AttendanceHour, verbose_name=_("Hour registered"), related_name='attendance_hour')
+    attendance_hour = models.ManyToManyField(AttendanceHour, verbose_name=_("Hour registered"),
+                                             related_name='attendance_hour')
     worked_total = models.TimeField(default=datetime.min.time())
 
     def __str__(self):
