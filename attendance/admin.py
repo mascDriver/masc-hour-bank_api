@@ -10,7 +10,7 @@ class BatidaPontoInline(admin.StackedInline):
 
 @admin.register(AttendanceDay)
 class RelogioPontoAdmin(admin.ModelAdmin):
-    inlines = (BatidaPontoInline,)
+    # inlines = (BatidaPontoInline,)
     filter_horizontal = ('attendance_hour',)
     fields = ('employee_shift', 'day', 'worked_total', 'attendance_hour')
     autocomplete_fields = ('employee_shift', )

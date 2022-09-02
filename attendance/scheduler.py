@@ -23,9 +23,10 @@ def verify_not_entrys():
     :return: obj
     :rtype:
     """
+    business_week = ((0, calendar.day_abbr[0:5]), (1, calendar.day_abbr[0:6]))
     for work_shift in WorkShift.objects.all():
         employee_shift = EmployeeShift.objects.filter(work_shift=work_shift)
-        if calendar.day_abbr[date.today().weekday()] in work_shift.working_days.split(' - '):
+        if calendar.day_abbr[date.today().weekday()] in business_week[int(work_shift.working_days)][1]:
             if datetime.now().time().replace(microsecond=0, second=0) in (
                     work_shift.entry1, work_shift.entry2, work_shift.exit1, work_shift.exit2):
                 for employee_shift in employee_shift:
