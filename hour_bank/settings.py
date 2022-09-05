@@ -184,6 +184,9 @@ CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
     'https://maschourbank.vercel.app',
 ]
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    r"^https://\w+\.mascdriver\.com\.br$",
+]
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
