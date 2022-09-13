@@ -3,7 +3,7 @@ from datetime import datetime, date
 
 from apscheduler.schedulers.background import BackgroundScheduler
 from fcm_django.models import FCMDevice
-from firebase_admin.messaging import Message
+from firebase_admin.messaging import Message, AndroidConfig, AndroidNotification
 
 from attendance.models import WorkShift, EmployeeShift
 
@@ -13,8 +13,16 @@ message = Message(
         "body": "Está na hora de bater o ponto ⌚⌚⌚",
         "data": '{"click_action": "/day"}',
         "priority": "high"
-    }
+    },
+    android=AndroidConfig(
+        notification=AndroidNotification(
+            icon="https://hourbank.mascdriver.com.br/badge_128.png",
+            title="Atenção!",
+            body="Está na hora de bater o ponto ⌚⌚⌚",
+        )
+    )
 )
+
 
 
 def verify_not_entrys():
