@@ -16,7 +16,7 @@ class WorkShift(models.Model):
     entry3 = models.TimeField(verbose_name=_('Optional entry'), null=True, blank=True)
     exit3 = models.TimeField(verbose_name=_('Optional exit'), null=True, blank=True)
     working_days = models.CharField(max_length=1,
-                                    choices=((0, ' - '.join(day_abbr[0:5])), (1, ' - '.join(day_abbr[0:6]))), default=0)
+                                    choices=((0, ' - '.join(day_abbr[0:5])), (1, ' - '.join(day_abbr[0:6]))), default=0, blank=True)
 
     def __str__(self):
         if self.name:
